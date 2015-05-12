@@ -13,6 +13,10 @@
         <item>Action button present</item>
         <item>No action button</item>
     </string-array>
+    <string-array name="cancel_present">
+        <item>Cancel button present</item>
+        <item>No cancel button</item>
+    </string-array>
     <string-array name="action_color">
         <item>Default</item>
         <item>Alert</item>

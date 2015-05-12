@@ -27,7 +27,7 @@ class SnackContainer extends FrameLayout {
 
     private static final String SAVED_MSGS = "SAVED_MSGS";
 
-    private Queue<SnackHolder> mSnacks = new LinkedList<SnackHolder>();
+    private Queue<SnackHolder> mSnacks = new LinkedList<>();
 
     private AnimationSet mOutAnimationSet;
     private AnimationSet mInAnimationSet;
@@ -188,6 +188,13 @@ class SnackContainer extends FrameLayout {
             holder.button.setVisibility(View.GONE);
         }
 
+        if (holder.snack.mCancelMessage != null){
+            holder.cancelButton.setText(holder.snack.mCancelMessage);
+            holder.cancelButton.setVisibility(View.VISIBLE);
+        }else{
+            holder.cancelButton.setVisibility(View.GONE);
+        }
+
         holder.button.setTextColor(holder.snack.mBtnTextColor);
         holder.snackView.setBackgroundColor(holder.snack.mBackgroundColor.getDefaultColor());
         if(holder.snack.mHeight > 0)
@@ -293,6 +300,7 @@ class SnackContainer extends FrameLayout {
         final View snackView;
         final TextView messageView;
         final TextView button;
+        final TextView cancelButton;
 
         final Snack snack;
         final OnVisibilityChangeListener visListener;
@@ -300,6 +308,7 @@ class SnackContainer extends FrameLayout {
         private SnackHolder(Snack snack, View snackView, OnVisibilityChangeListener listener) {
             this.snackView = snackView;
             button = (TextView) snackView.findViewById(R.id.snackButton);
+            cancelButton = (TextView) snackView.findViewById(R.id.snackCancelButton);
             messageView = (TextView) snackView.findViewById(R.id.snackMessage);
 
             this.snack = snack;
@@ -313,8 +322,7 @@ class SnackContainer extends FrameLayout {
     private int getPxFromDp(int dp) {
         Resources rs = getResources();
         int pxConverter = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, rs.getDisplayMetrics());
-        int px = pxConverter * dp;
-        return px;
+        return pxConverter * dp;
     }
 
 }

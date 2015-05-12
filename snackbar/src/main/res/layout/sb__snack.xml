@@ -11,6 +11,13 @@
         tools:text="Sample message"/>
 
     <TextView
+        android:id="@id/snackCancelButton"
+        style="@style/SnackBar.Button"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Cancel"/>
+
+    <TextView
         android:id="@id/snackButton"
         style="@style/SnackBar.Button"
         tools:text="Action"/>

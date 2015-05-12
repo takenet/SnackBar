@@ -41,7 +41,14 @@ public class SnackBar {
 
     private OnMessageClickListener mClickListener;
 
+    private OnCancelClickListener mCancelClickListener;
+
     private OnVisibilityChangeListener mVisibilityChangeListener;
+
+    public interface OnCancelClickListener {
+
+        void onCancelClick();
+    }
 
     public interface OnMessageClickListener {
 
@@ -87,6 +94,9 @@ public class SnackBar {
         mParentView = v;
         TextView snackBtn = (TextView) v.findViewById(R.id.snackButton);
         snackBtn.setOnClickListener(mButtonListener);
+
+        TextView snackCancelBtn = (TextView) v.findViewById(R.id.snackCancelButton);
+        snackCancelBtn.setOnClickListener(mCancelListener);
     }
 
     public static class Builder {
@@ -96,6 +106,7 @@ public class SnackBar {
         private Context mContext;
         private String mMessage;
         private String mActionMessage;
+        private String mCancelMessage;
         private int mActionIcon = 0;
         private Parcelable mToken;
         private short mDuration = MED_SNACK;
@@ -158,6 +169,17 @@ public class SnackBar {
         }
 
         /**
+         * Sets the message to display as the cancel message
+         *
+         * @param cancelMessage the literal string to display
+         * @return this builder
+         */
+        public Builder withCancelMessage(String cancelMessage) {
+            mCancelMessage = cancelMessage;
+            return this;
+        }
+
+        /**
          * Sets the message to display as the action message
          *
          * @param actionMessageResId the resource id of the string to display
@@ -168,6 +190,19 @@ public class SnackBar {
                 mActionMessage = mContext.getString(actionMessageResId);
             }
 
+            return this;
+        }
+
+        /**
+         * Sets the message to display as the action message
+         *
+         * @param cancelMessageResId the resource id of the string to display
+         * @return this builder
+         */
+        public Builder withCancelMessageId(int cancelMessageResId) {
+            if (cancelMessageResId > 0) {
+                mCancelMessage = mContext.getString(cancelMessageResId);
+            }
             return this;
         }
 
@@ -222,8 +257,7 @@ public class SnackBar {
          * @return this builder
          */
         public Builder withTextColorId(int colorId) {
-            ColorStateList color = mContext.getResources().getColorStateList(colorId);
-            mTextColor = color;
+            mTextColor = mContext.getResources().getColorStateList(colorId);
             return this;
         }
 
@@ -234,8 +268,7 @@ public class SnackBar {
          * @return this builder
          */
         public Builder withBackgroundColorId(int colorId) {
-            ColorStateList color = mContext.getResources().getColorStateList(colorId);
-            mBackgroundColor = color;
+            mBackgroundColor = mContext.getResources().getColorStateList(colorId);
             return this;
         }
 
@@ -262,6 +295,17 @@ public class SnackBar {
         }
 
         /**
+         * Sets the OnClickListener for the action button
+         *
+         * @param cancelClickListener the listener to inform of click events
+         * @return this builder
+         */
+        public Builder withOnCancelClickListener(OnCancelClickListener cancelClickListener) {
+            mSnackBar.setOnCancelClickListener(cancelClickListener);
+            return this;
+        }
+
+        /**
          * Sets the visibilityChangeListener for the SnackBar
          *
          * @param visibilityChangeListener the listener to inform of visibility changes
@@ -280,6 +324,7 @@ public class SnackBar {
         public SnackBar show() {
             Snack message = new Snack(mMessage,
                     (mActionMessage != null ? mActionMessage.toUpperCase() : null),
+                    (mCancelMessage != null ? mCancelMessage.toUpperCase() : null),
                     mActionIcon,
                     mToken,
                     mDuration,
@@ -332,6 +377,28 @@ public class SnackBar {
         return mParentView;
     }
 
+
+    private final View.OnClickListener mCance = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mClickListener != null && mSnackContainer.isShowing()) {
+                mClickListener.onMessageClick(mSnackContainer.peek().mToken);
+            }
+            mSnackContainer.hide();
+        }
+    };
+
+
+    private final View.OnClickListener mCancelListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mCancelClickListener != null && mSnackContainer.isShowing()) {
+                mCancelClickListener.onCancelClick();
+            }
+            mSnackContainer.hide();
+        }
+    };
+
     private final View.OnClickListener mButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -341,6 +408,11 @@ public class SnackBar {
             mSnackContainer.hide();
         }
     };
+
+    private SnackBar setOnCancelClickListener(OnCancelClickListener listener) {
+        mCancelClickListener = listener;
+        return this;
+    }
 
     private SnackBar setOnClickListener(OnMessageClickListener listener) {
         mClickListener = listener;

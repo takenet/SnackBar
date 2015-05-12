@@ -12,6 +12,8 @@ class Snack implements Parcelable {
 
     final String mActionMessage;
 
+    final String mCancelMessage;
+
     final int mActionIcon;
 
     final Parcelable mToken;
@@ -24,11 +26,12 @@ class Snack implements Parcelable {
 
     final int mHeight;
 
-    Snack(String message, String actionMessage, int actionIcon,
-                 Parcelable token, short duration, ColorStateList textColor,
-                 ColorStateList backgroundColor, int height) {
-        mMessage = message;
+    Snack(String message, String actionMessage, String cancelMessage, int actionIcon,
+          Parcelable token, short duration, ColorStateList textColor,
+          ColorStateList backgroundColor, int height) {
+        this.mMessage = message;
         mActionMessage = actionMessage;
+        mCancelMessage = cancelMessage;
         mActionIcon = actionIcon;
         mToken = token;
         mDuration = duration;
@@ -40,6 +43,7 @@ class Snack implements Parcelable {
     Snack(Parcel p) {
         mMessage = p.readString();
         mActionMessage = p.readString();
+        mCancelMessage = p.readString();
         mActionIcon = p.readInt();
         mToken = p.readParcelable(p.getClass().getClassLoader());
         mDuration = (short) p.readInt();
@@ -52,6 +56,7 @@ class Snack implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(mMessage);
         out.writeString(mActionMessage);
+        out.writeString(mCancelMessage);
         out.writeInt(mActionIcon);
         out.writeParcelable(mToken, 0);
         out.writeInt((int) mDuration);
