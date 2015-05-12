@@ -46,8 +46,10 @@ public class SnackBarActivity extends ActionBarActivity
 
     static final int CANCEL_BTN = 0;
 
+    private static final int SHOW_ON_ACTIVITY = 0;
+
     private Spinner mMsgLengthOptions, mDurationOptions, mActionBtnOptions, mCancelBtnOptions,
-            mActionBtnColorOptions, mBGColorOptions, mStringTypeOptions;
+            mActionBtnColorOptions, mBGColorOptions, mStringTypeOptions, mShowOnOptions;
     private SnackBar mSnackBar;
 
     @Override
@@ -62,6 +64,7 @@ public class SnackBarActivity extends ActionBarActivity
         mActionBtnColorOptions = (Spinner) findViewById(R.id.action_btn_color);
         mBGColorOptions = (Spinner) findViewById(R.id.bg_color);
         mStringTypeOptions = (Spinner) findViewById(R.id.action_btn_string_type);
+        mShowOnOptions = (Spinner) findViewById(R.id.show_on);
     }
 
 
@@ -118,12 +121,17 @@ public class SnackBarActivity extends ActionBarActivity
     }
 
     public void onCreateClicked(View view) {
-
+        SnackBar.Builder snackBarBuilder;
         short duration = 0;
         SnackBar.Style style;
         int bgColor;
 
-        SnackBar.Builder snackBarBuilder = new SnackBar.Builder(this);
+        int showOnIndex = mShowOnOptions.getSelectedItemPosition();
+        if(showOnIndex == SHOW_ON_ACTIVITY) {
+            snackBarBuilder = new SnackBar.Builder(this);
+        }else {
+            snackBarBuilder = new SnackBar.Builder(this.getApplicationContext());
+        }
 
         setMessage(snackBarBuilder);
 
@@ -199,7 +207,9 @@ public class SnackBarActivity extends ActionBarActivity
     @Override
     protected void onSaveInstanceState(Bundle saveState) {
         super.onSaveInstanceState(saveState);
-        saveState.putBundle(SAVED_SNACKBAR, mSnackBar.onSaveInstanceState());
+        if (mSnackBar != null) {
+            saveState.putBundle(SAVED_SNACKBAR, mSnackBar.onSaveInstanceState());
+        }
     }
 
     @Override

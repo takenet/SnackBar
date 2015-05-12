@@ -112,6 +112,19 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show on" />
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_on"
+            android:entries="@array/snack_show_on_types"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

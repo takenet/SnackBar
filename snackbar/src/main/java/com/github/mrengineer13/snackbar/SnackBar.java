@@ -15,14 +15,20 @@
 
 package com.github.mrengineer13.snackbar;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SnackBar {
@@ -122,6 +128,43 @@ public class SnackBar {
         public Builder(Activity activity) {
             mContext = activity.getApplicationContext();
             mSnackBar = new SnackBar(activity);
+        }
+
+        private View createSnackBarRootView() {
+            WindowManager windowManager = (WindowManager) mContext
+                    .getSystemService(Context.WINDOW_SERVICE);
+
+            LinearLayout rootView = new LinearLayout(mContext);
+
+            final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+
+            params.gravity = Gravity.BOTTOM;
+            windowManager.addView(rootView, params);
+
+            return rootView;
+        }
+
+        /**
+         * Constructs a new SnackBar, in a floating View
+         * This view will be on top of any window
+         *
+         * @param context the context used to obtain resources
+         */
+        public Builder(Context context){
+            PackageManager pm = context.getPackageManager();
+            String packageName = context.getPackageName();
+            if (pm.checkPermission(Manifest.permission.SYSTEM_ALERT_WINDOW, packageName) !=
+                    PackageManager.PERMISSION_GRANTED){
+                throw new RuntimeException("You must added SYSTEM_ALERT_WINDOW manifest to use this" +
+                        "constructor or use a constructor with an Activity or View");
+            }
+            mContext = context;
+            mSnackBar = new SnackBar(context, createSnackBarRootView());
         }
 
         /**

@@ -31,4 +31,8 @@
         <item>String</item>
         <item>Resources</item>
     </string-array>
+    <string-array name="snack_show_on_types">
+        <item>Activity</item>
+        <item>Floating View</item>
+    </string-array>
 </resources>
