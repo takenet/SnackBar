@@ -10,12 +10,10 @@
         <item>Long</item>
     </string-array>
     <string-array name="action_present">
-        <item>Action button present</item>
-        <item>No action button</item>
-    </string-array>
-    <string-array name="cancel_present">
-        <item>Cancel button present</item>
-        <item>No cancel button</item>
+        <item>Icon and text</item>
+        <item>Icon only</item>
+        <item>Text only</item>
+        <item>Hide</item>
     </string-array>
     <string-array name="action_color">
         <item>Default</item>

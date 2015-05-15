@@ -172,6 +172,19 @@ class SnackContainer extends FrameLayout {
         showSnack(holder, false);
     }
 
+    private void setButtonParams(SnackBarButtonParams params, TextView button){
+        if (params.mTitle != null || params.mIcon > 0){
+            button.setVisibility(View.VISIBLE);
+            button.setText(params.mTitle);
+            button.setCompoundDrawablesWithIntrinsicBounds(params.mIcon, 0, 0, 0);
+            if (params.mTextColor != null) {
+                button.setTextColor(params.mTextColor);
+            }
+        } else {
+            button.setVisibility(View.GONE);
+        }
+    }
+
     private void showSnack(final SnackHolder holder, boolean showImmediately) {
 
         setVisibility(View.VISIBLE);
@@ -180,22 +193,10 @@ class SnackContainer extends FrameLayout {
 
         addView(holder.snackView);
         holder.messageView.setText(holder.snack.mMessage);
-        if (holder.snack.mActionMessage != null) {
-            holder.button.setVisibility(View.VISIBLE);
-            holder.button.setText(holder.snack.mActionMessage);
-            holder.button.setCompoundDrawablesWithIntrinsicBounds(holder.snack.mActionIcon, 0, 0, 0);
-        } else {
-            holder.button.setVisibility(View.GONE);
-        }
 
-        if (holder.snack.mCancelMessage != null){
-            holder.cancelButton.setText(holder.snack.mCancelMessage);
-            holder.cancelButton.setVisibility(View.VISIBLE);
-        }else{
-            holder.cancelButton.setVisibility(View.GONE);
-        }
+        setButtonParams(holder.snack.mActionButtonParams, holder.button);
+        setButtonParams(holder.snack.mCancelButtonParams, holder.cancelButton);
 
-        holder.button.setTextColor(holder.snack.mBtnTextColor);
         holder.snackView.setBackgroundColor(holder.snack.mBackgroundColor.getDefaultColor());
         if(holder.snack.mHeight > 0)
             holder.snackView.getLayoutParams().height = this.getPxFromDp(holder.snack.mHeight);

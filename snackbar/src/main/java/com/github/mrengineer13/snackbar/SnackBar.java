@@ -108,15 +108,12 @@ public class SnackBar {
     public static class Builder {
 
         private SnackBar mSnackBar;
-
         private Context mContext;
+        private SnackBarButtonParams mActionButtonParams;
+        private SnackBarButtonParams mCancelButtonParams;
         private String mMessage;
-        private String mActionMessage;
-        private String mCancelMessage;
-        private int mActionIcon = 0;
         private Parcelable mToken;
         private short mDuration = MED_SNACK;
-        private ColorStateList mTextColor;
         private ColorStateList mBackgroundColor;
         private int mHeight;
 
@@ -128,6 +125,8 @@ public class SnackBar {
         public Builder(Activity activity) {
             mContext = activity.getApplicationContext();
             mSnackBar = new SnackBar(activity);
+            mActionButtonParams = new SnackBarButtonParams(getActionTextColor(Style.DEFAULT));
+            mCancelButtonParams = new SnackBarButtonParams(getActionTextColor(Style.DEFAULT));
         }
 
         private View createSnackBarRootView() {
@@ -207,7 +206,7 @@ public class SnackBar {
          * @return this builder
          */
         public Builder withActionMessage(String actionMessage) {
-            mActionMessage = actionMessage;
+            mActionButtonParams.mTitle = actionMessage;
             return this;
         }
 
@@ -218,7 +217,7 @@ public class SnackBar {
          * @return this builder
          */
         public Builder withCancelMessage(String cancelMessage) {
-            mCancelMessage = cancelMessage;
+            mCancelButtonParams.mTitle = cancelMessage;
             return this;
         }
 
@@ -230,7 +229,7 @@ public class SnackBar {
          */
         public Builder withActionMessageId(int actionMessageResId) {
             if (actionMessageResId > 0) {
-                mActionMessage = mContext.getString(actionMessageResId);
+                mActionButtonParams.mTitle = mContext.getString(actionMessageResId);
             }
 
             return this;
@@ -244,7 +243,7 @@ public class SnackBar {
          */
         public Builder withCancelMessageId(int cancelMessageResId) {
             if (cancelMessageResId > 0) {
-                mCancelMessage = mContext.getString(cancelMessageResId);
+                mCancelButtonParams.mTitle = mContext.getString(cancelMessageResId);
             }
             return this;
         }
@@ -256,7 +255,18 @@ public class SnackBar {
          * @return this builder
          */
         public Builder withActionIconId(int id) {
-            mActionIcon = id;
+            mActionButtonParams.mIcon = id;
+            return this;
+        }
+
+        /**
+         * Sets the cancel icon
+         *
+         * @param id the resource id of the icon to display
+         * @return this builder
+         */
+        public Builder withCancelIconId(int id) {
+            mCancelButtonParams.mIcon = id;
             return this;
         }
 
@@ -266,8 +276,19 @@ public class SnackBar {
          * @param style the {@link com.github.mrengineer13.snackbar.SnackBar.Style} to use
          * @return this builder
          */
-        public Builder withStyle(Style style) {
-            mTextColor = getActionTextColor(style);
+        public Builder withActionButtonStyle(Style style) {
+            mActionButtonParams.mTextColor = getActionTextColor(style);
+            return this;
+        }
+
+        /**
+         * Sets the {@link com.github.mrengineer13.snackbar.SnackBar.Style} for the cancel message
+         *
+         * @param style the {@link com.github.mrengineer13.snackbar.SnackBar.Style} to use
+         * @return this builder
+         */
+        public Builder withCancelButtonStyle(Style style) {
+            mCancelButtonParams.mTextColor = getActionTextColor(style);
             return this;
         }
 
@@ -300,7 +321,18 @@ public class SnackBar {
          * @return this builder
          */
         public Builder withTextColorId(int colorId) {
-            mTextColor = mContext.getResources().getColorStateList(colorId);
+            mActionButtonParams.mTextColor = mContext.getResources().getColorStateList(colorId);
+            return this;
+        }
+
+        /**
+         * Sets the {@link android.content.res.ColorStateList} for the cancel message
+         *
+         * @param colorId the
+         * @return this builder
+         */
+        public Builder withCancelColorId(int colorId) {
+            mCancelButtonParams.mTextColor = mContext.getResources().getColorStateList(colorId);
             return this;
         }
 
@@ -366,12 +398,10 @@ public class SnackBar {
          */
         public SnackBar show() {
             Snack message = new Snack(mMessage,
-                    (mActionMessage != null ? mActionMessage.toUpperCase() : null),
-                    (mCancelMessage != null ? mCancelMessage.toUpperCase() : null),
-                    mActionIcon,
+                    mActionButtonParams,
+                    mCancelButtonParams,
                     mToken,
                     mDuration,
-                    mTextColor != null ? mTextColor : getActionTextColor(Style.DEFAULT),
                     mBackgroundColor != null ? mBackgroundColor : mContext.getResources().getColorStateList(R.color.sb__snack_bkgnd),
                     mHeight != 0 ? mHeight : 0);
 

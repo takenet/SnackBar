@@ -4,50 +4,40 @@ import android.content.res.ColorStateList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.github.mrengineer13.snackbar.SnackBar.Style;
-
 class Snack implements Parcelable {
 
     final String mMessage;
 
-    final String mActionMessage;
+    final SnackBarButtonParams mActionButtonParams;
 
-    final String mCancelMessage;
-
-    final int mActionIcon;
+    final SnackBarButtonParams mCancelButtonParams;
 
     final Parcelable mToken;
 
     final short mDuration;
 
-    final ColorStateList mBtnTextColor;
-
     final ColorStateList mBackgroundColor;
 
     final int mHeight;
 
-    Snack(String message, String actionMessage, String cancelMessage, int actionIcon,
-          Parcelable token, short duration, ColorStateList textColor,
+    Snack(String message, SnackBarButtonParams actionButtonParams, SnackBarButtonParams cancelButtonParams,
+          Parcelable token, short duration,
           ColorStateList backgroundColor, int height) {
         this.mMessage = message;
-        mActionMessage = actionMessage;
-        mCancelMessage = cancelMessage;
-        mActionIcon = actionIcon;
+        mActionButtonParams = actionButtonParams;
+        mCancelButtonParams = cancelButtonParams;
         mToken = token;
         mDuration = duration;
-        mBtnTextColor = textColor;
         mBackgroundColor = backgroundColor;
         mHeight = height;
     }
     // reads data from parcel
     Snack(Parcel p) {
         mMessage = p.readString();
-        mActionMessage = p.readString();
-        mCancelMessage = p.readString();
-        mActionIcon = p.readInt();
+        mActionButtonParams = p.readParcelable(p.getClass().getClassLoader());
+        mCancelButtonParams = p.readParcelable(p.getClass().getClassLoader());
         mToken = p.readParcelable(p.getClass().getClassLoader());
         mDuration = (short) p.readInt();
-        mBtnTextColor = p.readParcelable(p.getClass().getClassLoader());
         mBackgroundColor = p.readParcelable(p.getClass().getClassLoader());
         mHeight = p.readInt();
     }
@@ -55,12 +45,10 @@ class Snack implements Parcelable {
     // writes data to parcel
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(mMessage);
-        out.writeString(mActionMessage);
-        out.writeString(mCancelMessage);
-        out.writeInt(mActionIcon);
+        out.writeParcelable(mActionButtonParams, 0);
+        out.writeParcelable(mCancelButtonParams, 0);
         out.writeParcelable(mToken, 0);
         out.writeInt((int) mDuration);
-        out.writeParcelable(mBtnTextColor, 0);
         out.writeParcelable(mBackgroundColor, 0);
         out.writeInt(mHeight);
     }

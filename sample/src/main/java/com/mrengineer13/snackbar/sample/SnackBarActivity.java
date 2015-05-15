@@ -40,7 +40,7 @@ public class SnackBarActivity extends ActionBarActivity
 
     static final int DEFAULT = 0, ALERT = 1, CONFIRM = 2, INFO = 3;
 
-    static final int ACTION_BTN = 0;
+    static final int BTN_TEXT_AND_ICON = 0, BTN_ICON_ONLY = 1, BTN_TEXT_ONLY = 2,  BTN_HIDE = 3;
 
     static final int STRING_TYPE_STRING = 0;
 
@@ -167,7 +167,7 @@ public class SnackBarActivity extends ActionBarActivity
                 break;
         }
 
-        snackBarBuilder.withStyle(style);
+        snackBarBuilder.withActionButtonStyle(style);
 
         int selectedBGColor = mBGColorOptions.getSelectedItemPosition();
         switch (selectedBGColor) {
@@ -184,13 +184,29 @@ public class SnackBarActivity extends ActionBarActivity
 
         int selectedActionBtnExistence = mActionBtnOptions.getSelectedItemPosition();
 
-        if (selectedActionBtnExistence == ACTION_BTN){
-            snackBarBuilder.withActionMessage("Action");
+        switch (selectedActionBtnExistence){
+            case BTN_TEXT_AND_ICON:
+                snackBarBuilder.withActionMessage("Action");
+            case BTN_ICON_ONLY:
+                snackBarBuilder.withActionIconId(R.drawable.ic_done_white_24dp);
+                break;
+            case BTN_TEXT_ONLY:
+                snackBarBuilder.withActionMessage("Action");
+            case BTN_HIDE:
+                break;
         }
 
         int selectedCancelBtnExistence = mCancelBtnOptions.getSelectedItemPosition();
-        if (selectedCancelBtnExistence == CANCEL_BTN){
-            snackBarBuilder.withCancelMessage("Cancel");
+        switch (selectedCancelBtnExistence){
+            case BTN_TEXT_AND_ICON:
+                snackBarBuilder.withCancelMessage("Cancel");
+            case BTN_ICON_ONLY:
+                snackBarBuilder.withCancelIconId(R.drawable.ic_close_white_24dp);
+                break;
+            case BTN_TEXT_ONLY:
+                snackBarBuilder.withCancelMessage("Cancel");
+            case BTN_HIDE:
+                break;
         }
 
         snackBarBuilder.withOnCancelClickListener(new SnackBar.OnCancelClickListener() {
