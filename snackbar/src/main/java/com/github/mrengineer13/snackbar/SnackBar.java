@@ -109,8 +109,8 @@ public class SnackBar {
 
         private SnackBar mSnackBar;
         private Context mContext;
-        private SnackBarButtonParams mActionButtonParams;
-        private SnackBarButtonParams mCancelButtonParams;
+        private final SnackBarButtonParams mActionButtonParams;
+        private final SnackBarButtonParams mCancelButtonParams;
         private String mMessage;
         private Parcelable mToken;
         private short mDuration = MED_SNACK;
@@ -164,6 +164,8 @@ public class SnackBar {
             }
             mContext = context;
             mSnackBar = new SnackBar(context, createSnackBarRootView());
+            mActionButtonParams = new SnackBarButtonParams(getActionTextColor(Style.DEFAULT));
+            mCancelButtonParams = new SnackBarButtonParams(getActionTextColor(Style.DEFAULT));
         }
 
         /**
@@ -175,6 +177,8 @@ public class SnackBar {
         public Builder(Context context, View v) {
             mContext = context;
             mSnackBar = new SnackBar(context, v);
+            mActionButtonParams = new SnackBarButtonParams(getActionTextColor(Style.DEFAULT));
+            mCancelButtonParams = new SnackBarButtonParams(getActionTextColor(Style.DEFAULT));
         }
 
         /**
