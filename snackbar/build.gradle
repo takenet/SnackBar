@@ -16,7 +16,7 @@ android {
 
 
 group = 'net.take'
-version = '1.0.2'
+version = '1.0.4'
 def gitHubUrl = 'https://github.com/takenet/SnackBar'
 
 bintray {
